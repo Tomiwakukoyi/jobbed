@@ -15,6 +15,9 @@ import useFetch from "../../../hook/useFetch";
 const Popularjobs = () => {
   const router = useRouter();
 
+  const [selectedJob, setSelectedJob] = useState();
+  const handleCardPress = (item) => {};
+
   const { data, isLoading, error } = useFetch("search", {
     query: "remote jobs nigeria",
     num_pages: 1,
@@ -35,7 +38,13 @@ const Popularjobs = () => {
         ) : (
           <FlatList
             data={data}
-            renderItem={({ item }) => <PopularJobCard item={item} />}
+            renderItem={({ item }) => (
+              <PopularJobCard
+                item={item}
+                selectedJob={selectedJob}
+                handleCardPress={handleCardPress}
+              />
+            )}
             keyExtractor={(item) => item?.job_id}
             contentContainerStyle={{ columnGap: SIZES.medium }}
             horizontal
