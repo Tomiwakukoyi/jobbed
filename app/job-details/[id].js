@@ -20,11 +20,34 @@ import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
 import { useRouter } from "expo-router";
 
+const tabs = ["About", "Qualifications", "Responsiblities"];
+
 const JobDetails = () => {
   const { params } = useGlobalSearchParams();
   const { router } = useRouter();
 
+  const [activeTab, setActiveTab] = useState(tabs[0]);
   const [refreshing, setRefreshing] = useState(false);
+
+  const displayTabContent = () => {
+    switch (activeTab) {
+      case "Qualifications":
+        return (
+          <Specifics
+            title="Qualifications"
+            points={data[0].job_highlights?.qualifications ?? ["N/A"]}
+          />
+        );
+
+      case "About":
+
+      case "Responsibilities":
+
+      default:
+        break;
+    }
+  };
+
   const onRefresh = () => {};
   const { data, isLoading, error, refetch } = useFetch("job-details", {
     job_id: params.id,
@@ -77,7 +100,13 @@ const JobDetails = () => {
                 location={data[0].job_country}
               />
 
-              <JobTabs />
+              <JobTabs
+                tabs={tabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+
+              {displayTabContent()}
             </View>
           )}
         </ScrollView>
