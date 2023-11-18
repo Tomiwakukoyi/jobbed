@@ -11,7 +11,9 @@ const Company = ({ companyLogo, jobTitle, companyName, location }) => {
       <View style={styles.logoBox}>
         <Image
           source={{
-            uri: checkImageURL(companyLogo) ? companyLogo : "",
+            uri: checkImageURL(companyLogo)
+              ? companyLogo
+              : "https://t4.ftcdn.net/jpg/05/05/61/73/360_F_505617309_NN1CW7diNmGXJfMicpY9eXHKV4sqzO5H.jpg",
           }}
           style={styles.logoImage}
         />
@@ -29,7 +31,7 @@ const Company = ({ companyLogo, jobTitle, companyName, location }) => {
             resizeMode="contain"
             style={styles.locationImage}
           />
-          <Text style={styles.locationName}>{location} </Text>
+          <Text style={styles.locationName}>{location}</Text>
         </View>
       </View>
     </View>

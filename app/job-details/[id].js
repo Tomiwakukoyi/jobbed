@@ -1,3 +1,5 @@
+import { Stack, useRouter, useSearchParams } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { Stack, useRouter, useGlobalSearchParams } from "expo-router";
-import { useState, useCallback } from "react";
+
 import {
   Company,
   JobAbout,
@@ -18,16 +19,25 @@ import {
 } from "../../components";
 import { COLORS, icons, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
-import { useRouter } from "expo-router";
 
-const tabs = ["About", "Qualifications", "Responsiblities"];
+const tabs = ["About", "Qualifications", "Responsibilities"];
 
 const JobDetails = () => {
-  const { params } = useGlobalSearchParams();
-  const { router } = useRouter();
+  const params = useSearchParams();
+  const router = useRouter();
+
+  const { data, isLoading, error, refetch } = useFetch("job-details", {
+    job_id: params.id,
+  });
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  }, []);
 
   const displayTabContent = () => {
     switch (activeTab) {
@@ -41,9 +51,7 @@ const JobDetails = () => {
 
       case "About":
         return (
-          <JobAbout
-            info={data[0].job_description ?? "No Job description provided"}
-          />
+          <JobAbout info={data[0].job_description ?? "No data provided"} />
         );
 
       case "Responsibilities":
@@ -55,17 +63,12 @@ const JobDetails = () => {
         );
 
       default:
-        break;
+        return null;
     }
   };
 
-  const onRefresh = () => {};
-  const { data, isLoading, error, refetch } = useFetch("job-details", {
-    job_id: params.id,
-  }); //job details passed into the usefetch hook is the end point were reaching
-
   return (
-    <SafeAreaView style={{ flex: 1, borderColor: COLORS.lightWhite }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
       <Stack.Screen
         options={{
           headerStyle: { backgroundColor: COLORS.lightWhite },
@@ -79,11 +82,7 @@ const JobDetails = () => {
             />
           ),
           headerRight: () => (
-            <ScreenHeaderBtn
-              iconUrl={icons.share}
-              dimension="60%"
-              handlePress={() => router.back()}
-            />
+            <ScreenHeaderBtn iconUrl={icons.share} dimension="60%" />
           ),
           headerTitle: "",
         }}
@@ -101,7 +100,7 @@ const JobDetails = () => {
           ) : error ? (
             <Text>Something went wrong</Text>
           ) : data.length === 0 ? (
-            <Text>No Data</Text>
+            <Text>No data available</Text>
           ) : (
             <View style={{ padding: SIZES.medium, paddingBottom: 100 }}>
               <Company
@@ -121,6 +120,13 @@ const JobDetails = () => {
             </View>
           )}
         </ScrollView>
+
+        <JobFooter
+          url={
+            data[0]?.job_google_link ??
+            "https://careers.google.com/jobs/results/"
+          }
+        />
       </>
     </SafeAreaView>
   );
