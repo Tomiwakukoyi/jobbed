@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
 
 import styles from "./footer.style";
@@ -11,9 +10,10 @@ const Footer = ({ url }) => {
         <Image
           source={icons.heartOutline}
           resizeMode="contain"
-          style-={styles.likeBtnImage}
+          style={styles.likeBtnImage}
         />
       </TouchableOpacity>
+
       <TouchableOpacity
         style={styles.applyBtn}
         onPress={() => Linking.openURL(url)}
