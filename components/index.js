@@ -15,6 +15,11 @@ import Specifics from "./jobdetails/specifics/Specifics";
 // common
 import NearbyJobCard from "./common/cards/nearby/NearbyJobCard";
 
+// components
+import Toggler from "./togglebtn/Toggler";
+
+// Pages
+
 export {
   ScreenHeaderBtn,
   Welcome,
@@ -25,5 +30,6 @@ export {
   JobAbout,
   JobFooter,
   Specifics,
-  NearbyJobCard
+  NearbyJobCard,
+  Toggler,
 };

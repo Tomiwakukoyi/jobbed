@@ -16,13 +16,13 @@ import {
   Popularjobs,
   ScreenHeaderBtn,
   Welcome,
+  Toggler,
 } from "../components";
 
 const Home = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [openNav, setOpenNav] = useState(false);
-  const [activeMenu, setActiveMenu] = useState("Home");
   const translateX = new Animated.Value(-100);
 
   useEffect(() => {
@@ -57,7 +57,6 @@ const Home = () => {
           headerRight: () => (
             <ScreenHeaderBtn iconUrl={images.profile} dimension="100%" />
           ),
-          headerTitle: "Jobbed",
         }}
       />
 
@@ -73,75 +72,41 @@ const Home = () => {
         <View style={styles.menuContent}>
           <TouchableHighlight
             onPress={() => {
-              console.log("Navigate to Home");
-              setActiveMenu("Home");
+              router.push("/");
+              setOpenNav(false);
             }}
             underlayColor={COLORS.gray}
             style={styles.menuItem}
           >
-            <Text
-              style={{
-                color: activeMenu === "Home" ? "#f5d7e3" : COLORS.lightWhite,
-                fontSize: SIZES.medium,
-              }}
-            >
+            <Text style={{ color: COLORS.lightWhite, fontSize: SIZES.medium }}>
               Home
             </Text>
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
-              console.log("Navigate to Favorites");
-              setActiveMenu("Favorites");
+              router.push("/pages/favorites/Favorites");
+              setOpenNav(false);
             }}
             underlayColor={COLORS.gray}
             style={styles.menuItem}
           >
-            <Text
-              style={{
-                color:
-                  activeMenu === "Favorites" ? "#f5d7e3" : COLORS.lightWhite,
-                fontSize: SIZES.medium,
-              }}
-            >
+            <Text style={{ color: COLORS.lightWhite, fontSize: SIZES.medium }}>
               Favorites
             </Text>
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
               console.log("Navigate to Settings");
-              setActiveMenu("Settings");
+              setOpenNav(false);
             }}
             underlayColor={COLORS.gray}
             style={styles.menuItem}
           >
-            <Text
-              style={{
-                color:
-                  activeMenu === "Settings" ? "#f5d7e3" : COLORS.lightWhite,
-                fontSize: SIZES.medium,
-              }}
-            >
+            <Text style={{ color: COLORS.lightWhite, fontSize: SIZES.medium }}>
               Settings
             </Text>
           </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() => {
-              console.log("Toggle Mode");
-              setActiveMenu("ToggleMode");
-            }}
-            underlayColor={COLORS.gray}
-            style={styles.menuItem}
-          >
-            <Text
-              style={{
-                color:
-                  activeMenu === "ToggleMode" ? "#f5d7e3" : COLORS.lightWhite,
-                fontSize: SIZES.medium,
-              }}
-            >
-              Toggle Mode
-            </Text>
-          </TouchableHighlight>
+          <Toggler />
         </View>
       </Animated.View>
 
