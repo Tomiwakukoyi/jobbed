@@ -1,12 +1,13 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
   SafeAreaView,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   StyleSheet,
-  Modal,
+  Animated,
 } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { COLORS, icons, images, SIZES } from "../constants";
@@ -21,13 +22,19 @@ const Home = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [openNav, setOpenNav] = useState(false);
+  const [activeMenu, setActiveMenu] = useState("Home");
+  const translateX = new Animated.Value(-100);
+
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: openNav ? 0 : -210,
+      duration: 300, // Adjust the duration of the transition as needed
+      useNativeDriver: false,
+    }).start();
+  }, [openNav]);
 
   const toggleNavigation = () => {
-    setOpenNav(true);
-  };
-
-  const closeNavigation = () => {
-    setOpenNav(false);
+    setOpenNav(!openNav);
   };
 
   return (
@@ -55,43 +62,88 @@ const Home = () => {
       />
 
       {/* Sidebar Navigation */}
-      {openNav && (
-        <SafeAreaView
-          style={{
-            position: "absolute",
-            backgroundColor: COLORS.secondary,
-            width: "50%",
-            flex: 1,
-            height: "100%",
-            zIndex: 20,
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 50,
-          }}
-        >
-          <View>
-            <TouchableOpacity onPress={() => console.log("Navigate to Home")}>
-              <Text>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log("Navigate to Home")}>
-              <Text>Favorites</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log("Navigate to Home")}>
-              <Text>Settings</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log("Navigate to Home")}>
-              <Text>Toggle Mode</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={() => setOpenNav(false)}>
-            <ScreenHeaderBtn
-              handlePress={closeNavigation}
-              iconUrl={icons.closeIcon}
-              dimension="60%"
-            />
-          </TouchableOpacity>
-        </SafeAreaView>
-      )}
+      <Animated.View
+        style={[
+          styles.navbarContainer,
+          {
+            transform: [{ translateX: translateX }],
+          },
+        ]}
+      >
+        <View style={styles.menuContent}>
+          <TouchableHighlight
+            onPress={() => {
+              console.log("Navigate to Home");
+              setActiveMenu("Home");
+            }}
+            underlayColor={COLORS.gray}
+            style={styles.menuItem}
+          >
+            <Text
+              style={{
+                color: activeMenu === "Home" ? "#f5d7e3" : COLORS.lightWhite,
+                fontSize: SIZES.medium,
+              }}
+            >
+              Home
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => {
+              console.log("Navigate to Favorites");
+              setActiveMenu("Favorites");
+            }}
+            underlayColor={COLORS.gray}
+            style={styles.menuItem}
+          >
+            <Text
+              style={{
+                color:
+                  activeMenu === "Favorites" ? "#f5d7e3" : COLORS.lightWhite,
+                fontSize: SIZES.medium,
+              }}
+            >
+              Favorites
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => {
+              console.log("Navigate to Settings");
+              setActiveMenu("Settings");
+            }}
+            underlayColor={COLORS.gray}
+            style={styles.menuItem}
+          >
+            <Text
+              style={{
+                color:
+                  activeMenu === "Settings" ? "#f5d7e3" : COLORS.lightWhite,
+                fontSize: SIZES.medium,
+              }}
+            >
+              Settings
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => {
+              console.log("Toggle Mode");
+              setActiveMenu("ToggleMode");
+            }}
+            underlayColor={COLORS.gray}
+            style={styles.menuItem}
+          >
+            <Text
+              style={{
+                color:
+                  activeMenu === "ToggleMode" ? "#f5d7e3" : COLORS.lightWhite,
+                fontSize: SIZES.medium,
+              }}
+            >
+              Toggle Mode
+            </Text>
+          </TouchableHighlight>
+        </View>
+      </Animated.View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1, padding: SIZES.medium }}>
@@ -111,5 +163,27 @@ const Home = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  navbarContainer: {
+    position: "absolute",
+    backgroundColor: COLORS.secondary,
+    width: "50%",
+    flex: 1,
+    zIndex: 20,
+    borderBottomRightRadius: 15,
+  },
+  menuContent: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  menuItem: {
+    display: "flex",
+    alignItems: "center",
+    paddingVertical: 30, // Adjust the vertical padding as needed
+    width: "100%", // Adjust the horizontal padding as needed
+  },
+});
 
 export default Home;
